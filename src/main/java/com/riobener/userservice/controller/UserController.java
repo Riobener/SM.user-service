@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/users")
+@RequestMapping("/api")
 public class UserController {
 
     @Autowired
     UserService userService;
 
-    @PostMapping("/register")
+    @PostMapping("/user/register")
     public ResponseEntity registerUser(@RequestBody User user) {
         try{
             userService.registerUser(user);
@@ -30,12 +30,12 @@ public class UserController {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
-    @GetMapping
-    public List<User> getAllUsers(){
-        return userService.getAllUsers();
+    @GetMapping("/user/")
+    public ResponseEntity getAllUsers(){
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @GetMapping
+    @GetMapping("/user")
     public ResponseEntity getUser(@RequestParam Long id){
         try{
             return ResponseEntity.ok(userService.getUserById(id));
@@ -46,7 +46,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/user/{id}")
     public ResponseEntity deleteUser(@PathVariable Long id){
         try{
             return ResponseEntity.ok(userService.deleteUserById(id));

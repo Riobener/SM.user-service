@@ -1,6 +1,7 @@
 package com.riobener.userservice.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -12,6 +13,9 @@ public class User {
     private String username;
     @Column(name = "password")
     private String password;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Favorite> favorites;
 
     public User() {}
 
@@ -39,5 +43,11 @@ public class User {
         this.password = password;
     }
 
+    public List<Favorite> getFavorites() {
+        return favorites;
+    }
 
+    public void setFavorites(List<Favorite> favorites) {
+        this.favorites = favorites;
+    }
 }
