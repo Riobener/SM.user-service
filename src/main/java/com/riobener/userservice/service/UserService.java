@@ -29,8 +29,8 @@ public class UserService {
         return UserModel.toListModels(userRepository.findAll());
     }
 
-    public UserModel getUserById(Long id) throws UserNotFoundException {
-        User user = userRepository.findById(id).get();
+    public UserModel getUserByUsername(String username) throws UserNotFoundException {
+        User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new UserNotFoundException("Пользователь не найден");
         }

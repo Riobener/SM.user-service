@@ -1,7 +1,9 @@
 package com.riobener.userservice.entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -16,6 +18,12 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Favorite> favorites;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name="user_roles",
+                joinColumns = @JoinColumn(name="userid"),
+                inverseJoinColumns = @JoinColumn(name="roleid"))
+    private Set<Role> roles = new HashSet<>();
 
     public User() {}
 
@@ -49,5 +57,13 @@ public class User {
 
     public void setFavorites(List<Favorite> favorites) {
         this.favorites = favorites;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

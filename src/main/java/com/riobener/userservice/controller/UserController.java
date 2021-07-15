@@ -12,11 +12,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/authenticated")
 public class UserController {
 
     @Autowired
     UserService userService;
+
+    @GetMapping("/")
+    public String helloUser(){
+        return "Welcome to user management service Api!";
+    }
 
     @PostMapping("/user/register")
     public ResponseEntity registerUser(@RequestBody User user) {
@@ -36,9 +41,9 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity getUser(@RequestParam Long id){
+    public ResponseEntity getUserByUsername(@RequestParam String username){
         try{
-            return ResponseEntity.ok(userService.getUserById(id));
+            return ResponseEntity.ok(userService.getUserByUsername(username));
         }catch(UserNotFoundException ex){
             return ResponseEntity.badRequest().body(ex.getMessage());
         }catch(Exception ex){
