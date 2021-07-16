@@ -7,22 +7,33 @@ import com.riobener.userservice.model.UserModel;
 import com.riobener.userservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class UserService {
+
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public User registerUser(User user) throws UserAlreadyExistException {
-
-        if (userRepository.findByUsername(user.getUsername()) != null) {
-            throw new UserAlreadyExistException("Пользователь уже существует");
+    public UserModel registerUser(User user) throws UserAlreadyExistException {
+        boolean userExists = userRepository.findByUsername(user.getUsername()).isPresent();
+        if(userExists){
+            throw new UserAlreadyExistException("already exist");
         }
-        return userRepository.save(user);
+        //System.out.println(user.getPassword());
+        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        return UserModel.toModel(userRepository.save(user));
     }
 
     public List<UserModel> getAllUsers() {
@@ -30,7 +41,7 @@ public class UserService {
     }
 
     public UserModel getUserByUsername(String username) throws UserNotFoundException {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username).get();
         if (user == null) {
             throw new UserNotFoundException("Пользователь не найден");
         }
@@ -46,5 +57,15 @@ public class UserService {
         }
         return UserModel.toModel(user);
     }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username).get();
+        if(user == null){
+            throw new UsernameNotFoundException("Пользователь не найден");
+        }
+        return user;
+    }
+
 
 }

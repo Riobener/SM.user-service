@@ -1,13 +1,15 @@
 package com.riobener.userservice.entity;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -19,13 +21,18 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Favorite> favorites;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name="user_roles",
-                joinColumns = @JoinColumn(name="userid"),
-                inverseJoinColumns = @JoinColumn(name="roleid"))
-    private Set<Role> roles = new HashSet<>();
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
 
-    public User() {}
+    public User(String username, String password, UserRole userRole) {
+        this.username = username;
+        this.password = password;
+        this.userRole = userRole;
+    }
+
+    public User() {
+
+    }
 
     public void setId(Long id) {
         this.id = id;
@@ -39,8 +46,34 @@ public class User {
         return username;
     }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRole.name());
+        return Collections.singletonList(authority);
     }
 
     public String getPassword() {
@@ -59,11 +92,11 @@ public class User {
         this.favorites = favorites;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public UserRole getUserRole() {
+        return userRole;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
     }
 }
