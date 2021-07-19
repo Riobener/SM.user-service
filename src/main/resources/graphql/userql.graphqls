@@ -1,0 +1,18 @@
+type User{
+    id:ID!,
+    username: String,
+    password: String,
+    favorites: [Favorite]
+    userRole: UserRole
+}
+extend type Query {
+    users(count:Int):[User]
+    user(id: ID):User
+}
+extend type Mutation {
+    registerUser(username: String, password: String):User
+}
+enum UserRole {
+    USER,
+    ADMIN
+}

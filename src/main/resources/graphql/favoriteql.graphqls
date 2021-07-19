@@ -1,0 +1,15 @@
+type Favorite{
+    id:ID!,
+    sampleId: Int,
+    user:User
+}
+type Query {
+    favorites(count:Int):[Favorite]
+    favorite(id:ID):Favorite
+}
+type Mutation{
+    createFavorite(sampleid:ID, userid:ID):Favorite
+    deleteFavorite(id:ID):Favorite
+}
+
+

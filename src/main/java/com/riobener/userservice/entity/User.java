@@ -18,7 +18,7 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL, mappedBy = "user")
     private List<Favorite> favorites;
 
     @Enumerated(EnumType.STRING)

@@ -28,7 +28,7 @@ public class UserController {
     @PostMapping("/user/register")
     public ResponseEntity registerUser(@RequestBody User user) {
         try {
-            userService.registerUser(user);
+            userService.registerUserModel(user);
             return ResponseEntity.ok("Успешная регистрация");
         } catch (UserAlreadyExistException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
@@ -41,7 +41,7 @@ public class UserController {
 
     @GetMapping("/user/")
     public ResponseEntity getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+        return ResponseEntity.ok(userService.getAllUsersModels());
     }
 
     @GetMapping("/user")
