@@ -1,7 +1,7 @@
 package com.riobener.userservice.model;
 
-import com.riobener.userservice.entity.User;
-import com.riobener.userservice.entity.UserRole;
+import com.riobener.userservice.domain.model.entities.User;
+import com.riobener.userservice.domain.model.value_objects.UserRole;
 
 import java.util.ArrayList;
 import java.util.List;

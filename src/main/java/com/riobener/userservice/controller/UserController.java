@@ -1,17 +1,13 @@
 package com.riobener.userservice.controller;
 
 
-import com.riobener.userservice.entity.User;
-import com.riobener.userservice.exception.UserAlreadyExistException;
-import com.riobener.userservice.exception.UserNotFoundException;
+import com.riobener.userservice.domain.model.entities.User;
+import com.riobener.userservice.domain.model.exceptions.UserAlreadyExistException;
+import com.riobener.userservice.domain.model.exceptions.UserNotFoundException;
 
-import com.riobener.userservice.service.UserService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")

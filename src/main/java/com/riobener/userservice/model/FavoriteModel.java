@@ -1,6 +1,6 @@
 package com.riobener.userservice.model;
 
-import com.riobener.userservice.entity.Favorite;
+import com.riobener.userservice.domain.model.entities.Favorite;
 
 public class FavoriteModel {
     private Long id;
