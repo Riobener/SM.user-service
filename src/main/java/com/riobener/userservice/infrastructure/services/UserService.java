@@ -85,10 +85,12 @@ public class UserService implements UserServiceInterface, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username).get();
-        if (user == null) {
-            throw new UsernameNotFoundException("Пользователь не найден");
+        boolean userExists = userRepository.findByUsername(username).isPresent();
+
+        if (!userExists) {
+            return null;
         }
+        User user = userRepository.findByUsername(username).get();
         return user;
     }
 }

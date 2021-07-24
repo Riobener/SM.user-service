@@ -1,14 +1,19 @@
 package com.riobener.userservice.infrastructure.security.config;
 
+import com.riobener.userservice.infrastructure.security.jwt.JwtRequestFilter;
 import com.riobener.userservice.infrastructure.services.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @EnableWebSecurity
@@ -18,16 +23,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserService userService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/**").permitAll()
+                .antMatchers("/api/user/auth").permitAll()
+                .antMatchers("/api/user/register").permitAll()
+                .antMatchers("/api/hello").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                .and().logout().clearAuthentication(true);
+                .exceptionHandling().and().sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
 
     }
 
@@ -54,5 +66,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         authenticationProvider.setPasswordEncoder(bCryptPasswordEncoder);
         authenticationProvider.setUserDetailsService(userService);
         return authenticationProvider;
+    }
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userService);
     }
 }
