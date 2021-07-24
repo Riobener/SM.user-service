@@ -8,12 +8,21 @@ public class Favorite {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name = "sampleid")
+    @Column(name = "sample_id")
     private Long sampleId;
 
     @ManyToOne
-    @JoinColumn(name = "userid")
+    @JoinColumn(name = "user_id")
     private User user;
+
+    public Favorite(Long sampleId, User user) {
+        this.sampleId = sampleId;
+        this.user = user;
+    }
+
+    public Favorite() {
+
+    }
 
     public Long getSampleId() {
         return sampleId;

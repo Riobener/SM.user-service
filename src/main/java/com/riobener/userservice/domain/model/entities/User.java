@@ -1,5 +1,7 @@
 package com.riobener.userservice.domain.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.riobener.userservice.domain.model.value_objects.UserInfo;
 import com.riobener.userservice.domain.model.value_objects.UserRole;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,18 +23,20 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL, mappedBy = "user")
-    private List<Favorite> favorites;
     @Embedded
     private UserInfo info;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Favorite> favorites;
+
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-    public User(String username,UserInfo info, String password, UserRole userRole) {
+    public User(String username, String password,UserInfo info, UserRole userRole) {
         this.username = username;
-        this.info = info;
         this.password = password;
+        this.info = info;
         this.userRole = userRole;
     }
 
@@ -104,5 +108,13 @@ public class User implements UserDetails {
 
     public void setUserRole(UserRole userRole) {
         this.userRole = userRole;
+    }
+
+    public UserInfo getInfo() {
+        return info;
+    }
+
+    public void setInfo(UserInfo info) {
+        this.info = info;
     }
 }

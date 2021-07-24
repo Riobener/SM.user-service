@@ -1,7 +1,6 @@
 package com.riobener.userservice.infrastructure.repositories;
 
 import com.riobener.userservice.domain.model.entities.Favorite;
-import com.riobener.userservice.domain.model.entities.User;
 import com.riobener.userservice.domain.repositories.FavoriteRepositoryInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -41,7 +40,7 @@ public class FavoriteRepository implements FavoriteRepositoryInterface {
     }
 
     @Override
-    public void deleteAllByUser(User user) {
-        favoriteJPARepository.deleteAllByUser(user);
+    public Iterable<Favorite> deleteAllByUserId(Long userId) {
+        return favoriteJPARepository.deleteAllByUserId(userId);
     }
 }
