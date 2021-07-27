@@ -9,6 +9,7 @@ import com.riobener.userservice.domain.model.exceptions.UserNotFoundException;
 import com.riobener.userservice.infrastructure.dto.request.CreateFavoriteDto;
 import com.riobener.userservice.infrastructure.dto.response.FavoriteResponseDto;
 import com.riobener.userservice.infrastructure.dto.response.UserResponseDto;
+import com.riobener.userservice.infrastructure.exceptions.RestFileNotFoundException;
 import com.riobener.userservice.infrastructure.services.FavoriteService;
 import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
@@ -37,6 +38,8 @@ public class FavoriteController {
                     FavoriteResponseDto.class);
             return ResponseEntity.ok(favoriteResponseDto);
         } catch (UserNotFoundException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        } catch (RestFileNotFoundException ex){
             return ResponseEntity.badRequest().body(ex.getMessage());
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());

@@ -6,9 +6,10 @@ import com.riobener.userservice.domain.model.exceptions.FavoriteAlreadyExistExce
 import com.riobener.userservice.domain.model.exceptions.FavoriteNotFoundException;
 import com.riobener.userservice.domain.model.exceptions.UserNotFoundException;
 import com.riobener.userservice.infrastructure.dto.request.CreateFavoriteDto;
+import com.riobener.userservice.infrastructure.exceptions.RestFileNotFoundException;
 
 public interface FavoriteServiceInterface {
-    Favorite createFavorite(CreateFavoriteDto dto) throws FavoriteAlreadyExistException, UserNotFoundException;
+    Favorite createFavorite(CreateFavoriteDto dto) throws FavoriteAlreadyExistException, UserNotFoundException, RestFileNotFoundException;
     Favorite deleteFavorite(Long favoriteId) throws FavoriteNotFoundException;
     Iterable<Favorite> findAllFavoritesByUser(Long userId) throws EmptyUserFavoritesException, UserNotFoundException;
 
